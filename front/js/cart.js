@@ -94,26 +94,40 @@ let erreur = false;
 const regexname = /(^[a-zA-Z -]{3,})/;
 //Gestion du prénom
 let prenom = document.getElementById('firstName').value;
+let errorMsgFisrtName = document.getElementById("firstNameErrorMsg");
+errorMsgFisrtName.innerText = "";
+let errorMsgLastName = document.getElementById("lastNameErrorMsg");
+errorMsgLastName.innerText = "";
+let errorMsgAddress = document.getElementById("addressErrorMsg");
+errorMsgAddress.innerText = "";
+let errorMsgCity = document.getElementById("cityErrorMsg");
+errorMsgCity.innerText = "";
+let errorMsgEmail = document.getElementById("emailErrorMsg");
+errorMsgEmail.innerText = "";
 if(!regexname.test(prenom)){
     erreur = true;
+    errorMsgFisrtName.innerText = "Merci d'indiquer un prénom de plus de 3 caractères";
     //alert("Vous devez entrer au minimum 3 lettres pour votre prénom.");
 }
 //Gestion du nom
 let nom = document.getElementById('lastName').value;
 if(!regexname.test(nom)){
     erreur = true;
+    errorMsgLastName.innerText = "Merci d'indiquer un nom de plus de 3 caractères";
     //alert("Vous devez entrer au minimum 3 lettres pour votre nom.");
 }
 //Gestion de l'adresse
 let adresse = document.getElementById('address').value;
 if(adresse.length < 3){
     erreur = true;
+    errorMsgAddress.innerText = "Merci d'indiquer une adresse de plus de 3 caractères";
     //alert("Vous devez entrer au minimum 3 lettres pour votre adresse.");
 }
 //Gestion de la ville
 let ville = document.getElementById('city').value;
 if(!regexname.test(ville)){
-    erreur = true;
+    erreur = true;  
+    errorMsgCity.innerText = "Merci d'indiquer un nom de ville de plus de 3 caractères";
     //alert("Vous devez entrer au minimum 3 lettres pour votre ville.");
 }
 const regexemail = /(^[\w-_\.]+@[\w-_\.]+\.[\w]{2,4})/;
@@ -121,50 +135,53 @@ const regexemail = /(^[\w-_\.]+@[\w-_\.]+\.[\w]{2,4})/;
 let email = document.getElementById('email').value;
 if(!regexemail.test(email)){
     erreur = true;
+    errorMsgEmail.innerText = "Merci d'indiquer une adresse email valide : des caractères suivis par un arobase puis un nom de domaine complètement qualifié";
     //alert("Vous devez entrer au minimum 3 lettres pour votre email.");
 }
-if(erreur==true) {
+/*if(erreur==true) {
   alert("Il y a une erreur dans vôtre formulaire, tous les champs doivent être rempli avec au minimum 3 carractères.");
   
-}
-let listeIdCanape = [];
-panier.forEach((choix, index) => {
-    listeIdCanape.push(choix._id);
-});
+}*/
+if(!erreur){
+    let listeIdCanape = [];
+    panier.forEach((choix, index) => {
+        listeIdCanape.push(choix._id);
+    });
 
-let message = {
-    contact: {
-      firstName: document.getElementById('firstName').value,
-      lastName: document.getElementById('lastName').value,
-      address: document.getElementById('address').value,
-      city: document.getElementById('city').value,
-      email: document.getElementById('email').value
-    },
-    products: listeIdCanape
-};
-console.log("Contenu de la variable message : "+ JSON.stringify(message));
-localStorage.removeItem("confirmationCommande");
-fetch("http://localhost:3000/api/products/order", {
-  method: "POST",
-  headers: {
-    'Accept': 'application/json, text/plain, */*',
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify(message)
-})
-.then(function (res) {
-  if (res.ok) {
-      return res.json();
+    let message = {
+        contact: {
+          firstName: document.getElementById('firstName').value,
+          lastName: document.getElementById('lastName').value,
+          address: document.getElementById('address').value,
+          city: document.getElementById('city').value,
+          email: document.getElementById('email').value
+        },
+        products: listeIdCanape
+    };
+    console.log("Contenu de la variable message : "+ JSON.stringify(message));
+    localStorage.removeItem("confirmationCommande");
+    fetch("http://localhost:3000/api/products/order", {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(message)
+    })
+    .then(function (res) {
+      if (res.ok) {
+          return res.json();
+      }
+    })
+    .then(function (confirmationCommande) {
+      console.log("Confirmation de commande : " + JSON.stringify(confirmationCommande));
+      localStorage.setItem("confirmationCommande", JSON.stringify(confirmationCommande));
+      window.location.href="confirmation.html";
+    })
+    .catch(function (error) {
+      console.log("Erreur : " + error);
+    });
   }
-})
-.then(function (confirmationCommande) {
-  console.log("Confirmation de commande : " + JSON.stringify(confirmationCommande));
-  localStorage.setItem("confirmationCommande", JSON.stringify(confirmationCommande));
-  window.location.href="confirmation.html";
-})
-.catch(function (error) {
-  console.log("Erreur : " + error);
-});
 
 });
 

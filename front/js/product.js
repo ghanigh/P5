@@ -42,6 +42,14 @@ fetch("http://localhost:3000/api/products/" + id)
         let select = document.getElementById('colors');
         let couleurChoisie = select.options[select.selectedIndex].value;
         let quantite = document.getElementById("quantity").value;
+        if (couleurChoisie == ""){
+            alert("Merci de choisir une couleur");
+            return;
+        }
+        if(quantite == 0 || quantite > 100){
+            alert("Merci de choisir une quantité comprise entre 0 et 100 articles");
+            return;
+        }
         console.log("Couleur : "+ couleurChoisie);
         console.log("Quantité : " + quantite);
         let choix = {
