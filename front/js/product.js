@@ -84,6 +84,9 @@ fetch("http://localhost:3000/api/products/" + id)
                 if(item._id == choix._id && item.couleur == choix.couleur){
                     //On met juste à jour la quantité
                     panier[index].quantite = parseInt(panier[index].quantite) + parseInt(choix.quantite);
+                    if(panier[index].quantite>100){
+                        panier[index].quantite=100;
+                    }
                     //On indique que le panier a été modifié
                     panierMiseAJour = true;
                 }
